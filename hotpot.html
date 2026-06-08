@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>火锅料 Hotpot Sets — Mellowgrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Hotpot theme — deep, warm, rich reds & embers */
+    --bg:        #0F0A08;
+    --surface:   #1A1009;
+    --surface-2: #221508;
+    --border:    rgba(200,80,30,0.18);
+    --red:       #C83C1A;
+    --ember:     #E05C20;
+    --gold:      #D4973A;
+    --cream:     #F5EEE3;
+    --mid:       rgba(245,238,227,0.55);
+    --faint:     rgba(245,238,227,0.18);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans:  'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--cream);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── GLOW BLOBS ── */
+  .glow {
+    position: fixed; pointer-events: none; z-index: 0;
+    border-radius: 50%; filter: blur(120px); opacity: 0.18;
+  }
+  .glow-1 { width: 600px; height: 600px; background: var(--red);    top: -150px; left: -100px; }
+  .glow-2 { width: 500px; height: 500px; background: var(--ember);  bottom: 0;   right: -100px; }
+  .glow-3 { width: 300px; height: 300px; background: var(--gold);   top: 40%;    left: 40%; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 2.5rem;
+    background: rgba(15,10,8,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--serif); font-size: 1.2rem; font-weight: 500;
+    color: var(--cream); text-decoration: none; letter-spacing: 0.02em;
+  }
+  .nav-logo span { color: var(--ember); }
+  .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem; font-weight: 400; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--mid); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cream); }
+  .nav-back {
+    font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ember); text-decoration: none;
+    display: flex; align-items: center; gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 9rem 5rem 5rem;
+    position: relative; z-index: 1;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ember); margin-bottom: 1.8rem;
+  }
+  .hero-tag::before {
+    content: ''; display: block; width: 28px; height: 1px; background: var(--ember);
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 500; line-height: 1.0;
+    color: var(--cream); margin-bottom: 0.4rem;
+  }
+  .hero-title-zh {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 400; font-style: italic;
+    color: var(--ember); margin-bottom: 2rem;
+    letter-spacing: 0.08em;
+  }
+  .hero-desc {
+    font-size: 1rem; color: var(--mid); line-height: 1.8;
+    max-width: 520px; margin-bottom: 3rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-fire {
+    display: inline-block; padding: 0.9rem 2.2rem;
+    background: var(--red); color: var(--cream);
+    font-size: 0.82rem; font-weight: 400; letter-spacing: 0.08em;
+    text-transform: uppercase; text-decoration: none; border: none;
+    transition: background 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .btn-fire:hover { background: var(--ember); }
+  .btn-ghost {
+    display: inline-block; padding: 0.9rem 2.2rem;
+    background: transparent; color: var(--cream);
+    font-size: 0.82rem; font-weight: 400; letter-spacing: 0.08em;
+    text-transform: uppercase; text-decoration: none;
+    border: 1px solid rgba(245,238,227,0.25);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--cream); }
+
+  /* scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--faint);
+  }
+  .scroll-hint::after {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--faint);
+  }
+
+  /* ── SECTION SHARED ── */
+  section { position: relative; z-index: 1; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ember); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-label::before { content:''; display:block; width:20px; height:1px; background:var(--ember); }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500; line-height: 1.15; color: var(--cream);
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ── SETS SECTION ── */
+  #sets {
+    padding: 7rem 5rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+  .sets-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 4rem;
+  }
+  .sets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .set-card {
+    background: var(--surface-2);
+    padding: 2.8rem 2.5rem 2.5rem;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s, background 0.3s;
+    text-decoration: none; color: inherit;
+    display: block;
+    position: relative; overflow: hidden;
+  }
+  .set-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .set-card:hover { border-color: rgba(200,80,30,0.4); background: rgba(34,21,8,0.9); }
+  .set-card:hover::before { opacity: 1; }
+
+  .set-size {
+    display: inline-block;
+    font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    color: var(--mid); margin-bottom: 1.5rem;
+  }
+  .set-card.popular .set-size {
+    background: var(--red); border-color: var(--red); color: var(--cream);
+  }
+  .set-name {
+    font-family: var(--serif); font-size: 2rem; font-weight: 500;
+    color: var(--cream); line-height: 1.1; margin-bottom: 0.3rem;
+  }
+  .set-name-zh { font-size: 0.88rem; color: var(--ember); letter-spacing: 0.06em; margin-bottom: 1.2rem; }
+  .set-desc { font-size: 0.88rem; color: var(--mid); line-height: 1.75; margin-bottom: 2rem; }
+
+  .set-includes { margin-bottom: 2rem; }
+  .set-includes-label {
+    font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 1rem;
+  }
+  .set-items { display: flex; flex-direction: column; gap: 0.6rem; }
+  .set-item {
+    display: flex; align-items: center; gap: 0.8rem;
+    font-size: 0.85rem; color: var(--mid);
+  }
+  .set-item::before {
+    content: ''; flex-shrink: 0;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--ember);
+  }
+  .set-item strong { color: var(--cream); font-weight: 400; }
+
+  .set-price { margin-bottom: 2rem; }
+  .set-price-num {
+    font-family: var(--serif); font-size: 2.5rem; font-weight: 500;
+    color: var(--cream); line-height: 1;
+  }
+  .set-price-note { font-size: 0.78rem; color: var(--mid); margin-top: 0.2rem; }
+
+  /* ── A LA CARTE ── */
+  #alacarte {
+    padding: 7rem 5rem;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+  .alacarte-header { margin-bottom: 3.5rem; }
+  .meats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    border: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+  .meat-card {
+    padding: 2rem 1.8rem;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    transition: background 0.25s;
+  }
+  .meat-card:last-child { border-right: none; }
+  .meat-card:hover { background: var(--surface-2); }
+  .meat-emoji { font-size: 1.6rem; margin-bottom: 1rem; display: block; }
+  .meat-name { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; margin-bottom: 0.2rem; }
+  .meat-zh { font-size: 0.8rem; color: var(--ember); letter-spacing: 0.04em; margin-bottom: 0.8rem; }
+  .meat-desc { font-size: 0.83rem; color: var(--mid); line-height: 1.7; }
+
+  /* ── HOW IT WORKS ── */
+  #how {
+    padding: 7rem 5rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+  .how-header { margin-bottom: 4rem; }
+  .steps-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; position: relative;
+  }
+  .steps-row::after {
+    content: '';
+    position: absolute; top: 28px; left: 12.5%; right: 12.5%;
+    height: 1px; background: var(--border); z-index: 0;
+  }
+  .step { padding: 0 1.5rem; position: relative; z-index: 1; }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 1.2rem; color: var(--ember);
+    margin-bottom: 1.5rem;
+  }
+  .step h3 {
+    font-family: var(--serif); font-size: 1.15rem; font-weight: 500;
+    color: var(--cream); margin-bottom: 0.5rem;
+  }
+  .step p { font-size: 0.83rem; color: var(--mid); line-height: 1.7; }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 8rem 5rem;
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: '火锅';
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: var(--serif); font-size: 22rem; font-weight: 600;
+    color: rgba(200,80,30,0.04); line-height: 1;
+    pointer-events: none; user-select: none; white-space: nowrap;
+  }
+  .cta-section .section-label { justify-content: center; }
+  .cta-title {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 500; color: var(--cream);
+    margin: 1rem 0 1.5rem; line-height: 1.15;
+  }
+  .cta-title em { font-style: italic; color: var(--gold); }
+  .cta-desc { font-size: 0.9rem; color: var(--mid); margin-bottom: 2.5rem; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg);
+    color: var(--faint);
+    padding: 2.5rem 5rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative; z-index: 1;
+  }
+  footer a { color: var(--mid); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+  footer a:hover { color: var(--cream); }
+  .footer-brand { font-family: var(--serif); font-size: 1.1rem; color: var(--cream); }
+  .footer-links { display: flex; gap: 2rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 8rem 1.5rem 5rem; }
+    .scroll-hint { left: 1.5rem; }
+    #sets, #alacarte, #how, .cta-section { padding: 4rem 1.5rem; }
+    .sets-grid { grid-template-columns: 1fr; }
+    .meats-grid { grid-template-columns: 1fr; }
+    .meat-card { border-right: none; border-bottom: 1px solid var(--border); }
+    .steps-row { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    .steps-row::after { display: none; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- GLOWS -->
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-back">← Back to Mellowgrace</a>
+  <ul class="nav-links">
+    <li><a href="#sets">Sets</a></li>
+    <li><a href="#alacarte">À La Carte</a></li>
+    <li><a href="#how">How to Order</a></li>
+  </ul>
+  <a href="order.html" class="btn-fire" style="font-size:0.75rem; padding:0.6rem 1.4rem;">Order Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-tag">Mellowgrace · Fresh Pickup Sets</p>
+  <h1 class="hero-title">Hotpot Night,</h1>
+  <p class="hero-title-zh">sorted. 火锅料</p>
+  <p class="hero-desc">Pre-packed fresh and ready for self-pickup. Everything you need for a perfect hotpot night — quality meats, noodles, and all the good bits, portioned and prepped for you.</p>
+  <div class="hero-btns">
+    <a href="#sets" class="btn-fire">See the Sets</a>
+    <a href="order.html" class="btn-ghost">Place an Order</a>
+  </div>
+  <div class="scroll-hint">Scroll to explore</div>
+</section>
+
+<!-- SETS -->
+<section id="sets">
+  <div class="sets-header">
+    <div>
+      <p class="section-label">Choose your set</p>
+      <h2 class="section-title">Everything in <em>one pack</em></h2>
+    </div>
+  </div>
+
+  <div class="sets-grid">
+
+    <!-- 2-person -->
+    <a href="order.html" class="set-card">
+      <span class="set-size">2-Person Set</span>
+      <h3 class="set-name">The Duo</h3>
+      <p class="set-name-zh">双人套餐</p>
+      <p class="set-desc">A perfectly portioned set for two — all the essentials for a cosy hotpot night without the fuss.</p>
+      <div class="set-includes">
+        <p class="set-includes-label">What's included</p>
+        <div class="set-items">
+          <div class="set-item"><strong>羊肉卷</strong> Lamb Slices</div>
+          <div class="set-item"><strong>牛肉卷</strong> Beef Slices</div>
+          <div class="set-item"><strong>猪肉卷</strong> Pork Slices</div>
+          <div class="set-item"><strong>面条</strong> Noodles</div>
+          <div class="set-item"><strong>牛肉丸</strong> Beef Balls</div>
+        </div>
+      </div>
+      <div class="set-price">
+        <p class="set-price-num">$38</p>
+        <p class="set-price-note">Self-pickup · 48h notice required</p>
+      </div>
+      <span class="btn-fire" style="display:inline-block; font-size:0.75rem; padding:0.65rem 1.6rem;">Order this set →</span>
+    </a>
+
+    <!-- 4-person -->
+    <a href="order.html" class="set-card popular">
+      <span class="set-size">4-Person Set · Most Popular</span>
+      <h3 class="set-name">The Feast</h3>
+      <p class="set-name-zh">四人套餐</p>
+      <p class="set-desc">The full spread for a proper gathering — generous portions of every cut plus the extras that make hotpot legendary.</p>
+      <div class="set-includes">
+        <p class="set-includes-label">What's included</p>
+        <div class="set-items">
+          <div class="set-item"><strong>羊肉卷</strong> Lamb Slices</div>
+          <div class="set-item"><strong>牛肉卷</strong> Beef Slices</div>
+          <div class="set-item"><strong>猪肉卷</strong> Pork Slices</div>
+          <div class="set-item"><strong>面条</strong> Noodles</div>
+          <div class="set-item"><strong>牛肉丸</strong> Beef Balls</div>
+          <div class="set-item"><strong>羊肉串</strong> Lamb Skewers</div>
+        </div>
+      </div>
+      <div class="set-price">
+        <p class="set-price-num">$68</p>
+        <p class="set-price-note">Self-pickup · 48h notice required</p>
+      </div>
+      <span class="btn-fire" style="display:inline-block; font-size:0.75rem; padding:0.65rem 1.6rem;">Order this set →</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- À LA CARTE -->
+<section id="alacarte">
+  <div class="alacarte-header">
+    <p class="section-label">Individual items</p>
+    <h2 class="section-title">À la <em>carte</em></h2>
+  </div>
+
+  <div class="meats-grid">
+    <div class="meat-card">
+      <span class="meat-emoji">🥩</span>
+      <h3 class="meat-name">Lamb Slices</h3>
+      <p class="meat-zh">羊肉卷</p>
+      <p class="meat-desc">Thinly sliced tender lamb — the heart of any great hotpot. Cooks in seconds, melts in your mouth.</p>
+    </div>
+    <div class="meat-card">
+      <span class="meat-emoji">🥩</span>
+      <h3 class="meat-name">Beef Slices</h3>
+      <p class="meat-zh">牛肉卷</p>
+      <p class="meat-desc">Rich, marbled beef rolls. Silky texture, bold flavour — pairs beautifully with sesame dipping sauce.</p>
+    </div>
+    <div class="meat-card">
+      <span class="meat-emoji">🥩</span>
+      <h3 class="meat-name">Pork Slices</h3>
+      <p class="meat-zh">猪肉卷</p>
+      <p class="meat-desc">Delicate pork belly cuts — subtly sweet and always a crowd-pleaser at the table.</p>
+    </div>
+    <div class="meat-card">
+      <span class="meat-emoji">🍜</span>
+      <h3 class="meat-name">Noodles</h3>
+      <p class="meat-zh">面条</p>
+      <p class="meat-desc">Smooth, springy noodles that soak up every drop of your broth. The perfect hotpot finish.</p>
+    </div>
+    <div class="meat-card">
+      <span class="meat-emoji">🔮</span>
+      <h3 class="meat-name">Beef Balls</h3>
+      <p class="meat-zh">牛肉丸</p>
+      <p class="meat-desc">Bouncy, hand-pressed beef balls with a satisfying chew. A must-have in any proper hotpot spread.</p>
+    </div>
+    <div class="meat-card">
+      <span class="meat-emoji">🍢</span>
+      <h3 class="meat-name">Lamb Skewers</h3>
+      <p class="meat-zh">羊肉串</p>
+      <p class="meat-desc">Cumin-spiced lamb skewers — great as a side or dunked straight into the pot for extra flavour.</p>
+    </div>
+  </div>
+
+  <p style="font-size:0.83rem; color:var(--mid); text-align:center;">
+    Want to mix and match? <a href="order.html" style="color:var(--ember); text-decoration:none; border-bottom:1px solid var(--ember);">Message us to customise your order →</a>
+  </p>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-header">
+    <p class="section-label">Simple process</p>
+    <h2 class="section-title">How to <em>order</em></h2>
+  </div>
+  <div class="steps-row">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Place Your Order</h3>
+      <p>Order at least 48 hours before your event via the order form or WeChat.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>We Prep Fresh</h3>
+      <p>Your set is packed fresh on the day — no pre-frozen shortcuts, ever.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Self-Pickup</h3>
+      <p>Pick up from our Monash area location at your agreed time. Easy and convenient.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Hotpot Night 🔥</h3>
+      <p>Fire up the pot, gather your people, and enjoy. All the hard work is already done.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <p class="section-label">Ready to order?</p>
+  <h2 class="cta-title">Make your next gathering<br /><em>unforgettable.</em></h2>
+  <p class="cta-desc">Order 48 hours in advance. Self-pickup in Monash area.</p>
+  <div class="cta-btns">
+    <a href="order.html" class="btn-fire">Place an Order</a>
+    <a href="index.html" class="btn-ghost">Back to Menu</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-brand">Mellowgrace</span>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="order.html">Order</a>
+    <a href="#">WeChat</a>
+    <a href="#">小红书</a>
+  </div>
+  <span style="font-size:0.75rem;">© 2026 Mellowgrace</span>
+</footer>
+
+</body>
+</html>
