@@ -77,9 +77,25 @@
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 9rem 5rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 70px;
     position: relative; z-index: 1;
+  }
+  .hero-text {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 5rem 3.5rem 5rem 5rem;
+    position: relative;
+  }
+  .hero-image {
+    position: relative; overflow: hidden;
+    background: var(--surface-2);
+  }
+  .hero-image img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    display: block;
+    opacity: 0.85;
   }
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.5rem;
@@ -129,7 +145,7 @@
 
   /* scroll indicator */
   .scroll-hint {
-    position: absolute; bottom: 2.5rem; left: 5rem;
+    position: absolute; bottom: 2.5rem; left: 0;
     display: flex; align-items: center; gap: 0.8rem;
     font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--faint);
@@ -328,7 +344,9 @@
   @media (max-width: 900px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
-    .hero { padding: 8rem 1.5rem 5rem; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-text { padding: 8rem 1.5rem 3rem; }
+    .hero-image { height: 60vw; }
     .scroll-hint { left: 1.5rem; }
     #sets, #alacarte, #how, .cta-section { padding: 4rem 1.5rem; }
     .sets-grid { grid-template-columns: 1fr; }
@@ -360,15 +378,20 @@
 
 <!-- HERO -->
 <section class="hero">
-  <p class="hero-tag">Mellowgrace · Fresh Pickup Sets</p>
-  <h1 class="hero-title">Hotpot Night,</h1>
-  <p class="hero-title-zh">sorted. 火锅料</p>
-  <p class="hero-desc">Pre-packed fresh and ready for self-pickup. Everything you need for a perfect hotpot night — quality meats, noodles, and all the good bits, portioned and prepped for you.</p>
-  <div class="hero-btns">
-    <a href="#sets" class="btn-fire">See the Sets</a>
-    <a href="order.html" class="btn-ghost">Place an Order</a>
+  <div class="hero-text">
+    <p class="hero-tag">Mellowgrace · Fresh Pickup Sets</p>
+    <h1 class="hero-title">Hotpot Night,</h1>
+    <p class="hero-title-zh">sorted. 火锅料</p>
+    <p class="hero-desc">Pre-packed fresh and ready for self-pickup. Everything you need for a perfect hotpot night — quality meats, noodles, and all the good bits, portioned and prepped for you.</p>
+    <div class="hero-btns">
+      <a href="#sets" class="btn-fire">See the Sets</a>
+      <a href="order.html" class="btn-ghost">Place an Order</a>
+    </div>
+    <div class="scroll-hint">Scroll to explore</div>
   </div>
-  <div class="scroll-hint">Scroll to explore</div>
+  <div class="hero-image">
+    <img src="Assets/photo-1.jpg" alt="Hotpot ingredients fresh packed" />
+  </div>
 </section>
 
 <!-- SETS -->
